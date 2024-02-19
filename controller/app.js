@@ -34,6 +34,28 @@ async function coursePurchased(req, res) {
     res.json({ msg: "Course purchased successfully" });
 }
 
+async function userOwnCourses(req,res){
+    
+
+    let {username,password} = req.headers;
+
+    let user = await User.findOne({username})
+
+    if(user){
+        let myCourses = await Course.find({
+            _id:{
+                "$in":user.purchasedCoursed
+            }
+        })
+
+        res.json({mypurchased:myCourses})
+
+    }else{
+        res.json({msg:'user does not exist'})
+    }
+
+    
+}
 // Route to get a list of all users
 async function allUsers(req, res) {
     // Retrieve all users from the database
@@ -62,4 +84,4 @@ async function adminRoute(req, res) {
 }
 
 // Export the route handlers for use in other parts of the application
-module.exports = { userRoute, adminRoute, allCourses, allUsers, coursePurchased };
+module.exports = { userRoute, adminRoute, allCourses, allUsers, coursePurchased ,userOwnCourses};
